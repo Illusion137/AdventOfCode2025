@@ -29,12 +29,11 @@ bool is_invalid_id(uint64_t id, uint32_t splits){
     if(str.size() % splits != 0) return false;
     uint32_t split_size = str.size() / splits;
     std::string first_str = str.substr(0, split_size);
-    uint32_t same_strs = 1;
     for(uint32_t i = 1; i < splits; i++){
-        if(first_str == str.substr(split_size * i, split_size))
-            same_strs++;
+        if(first_str != str.substr(split_size * i, split_size))
+            return false;
     }
-    return same_strs == splits;
+    return true;
 }
 
 uint64_t sol1(const std::string& path){
