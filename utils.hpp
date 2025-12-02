@@ -5,7 +5,7 @@
 #include <print>
 
 #define INPUT_FILE "input.txt"
-#define INPUT2_FILE "input2.txt"
+#define SAMPLE_FILE "sample.txt"
 
 static inline std::string read_file(std::string path){
     std::ifstream file(path);
@@ -15,6 +15,8 @@ static inline std::string read_file(std::string path){
     ss << file.rdbuf();
     return ss.str();    
 }
+static inline std::string read_input(){ return read_file(INPUT_FILE); }
+static inline std::string read_sample(){ return read_file(SAMPLE_FILE); }
 
 static inline std::vector<std::string> split_string(const std::string& input, const std::string& delimiter) {
     std::vector<std::string> result;

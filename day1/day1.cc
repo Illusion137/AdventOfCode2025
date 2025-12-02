@@ -1,6 +1,8 @@
 #include "../utils.hpp"
 #include <cmath>
-#include <print>
+
+#define SAMPLE_1 3
+#define SAMPLE_2 6
 
 #define DIAL_START 50
 #define MAX 100.0
@@ -19,7 +21,6 @@ std::vector<Turn> get_turns(const std::string& path){
     return turns;
 }
 
-// 0-99
 int32_t calculate_dial(int32_t current, Turn turn){
     current += turn;
     current %= (int)MAX;
@@ -71,10 +72,12 @@ int32_t sol2(const std::vector<Turn> &turns){
 }
 
 int main(){
-    std::println("Solution1-Sample: {}", sol1(get_turns("day1/sampleInput.txt")));
-    std::println("Solution1-Real  : {}", sol1(get_turns("day1/input.txt")));
+    std::println("Solution1-Sample: {}", sol1(get_turns(SAMPLE_FILE)));
+    assert(sol1(get_turns(SAMPLE_FILE)) == SAMPLE_1);
+    std::println("Solution1-Real  : {}", sol1(get_turns(INPUT_FILE)));
     std::println("");
-    std::println("Solution2-Sample: {}", sol2(get_turns("day1/sampleInput.txt")));
-    std::println("Solution2-Real  : {}", sol2(get_turns("day1/input2.txt")));
+    std::println("Solution2-Sample: {}", sol2(get_turns(SAMPLE_FILE)));
+    assert(sol2(get_turns(SAMPLE_FILE)) == SAMPLE_2);
+    std::println("Solution2-Real  : {}", sol2(get_turns(INPUT_FILE)));
     return 0;
 }
