@@ -15,17 +15,16 @@ typedef std::pair<uint8_t, uint32_t> Max;
 typedef std::vector<std::vector<Max>> Maxes;
 
 Banks get_banks(const std::string& path){
-    const std::string contents = read_file(path);
-    std::vector<std::string> lines = split_string(contents, "\n");
+    const std::vector<std::string> lines = read_file_lines(path);
     Banks banks;
     banks.reserve(lines.size());
     for(const auto &line: lines){
         Bank joltages{};
         joltages.reserve(line.size());
         for(const char c: line){
-            joltages.push_back(c - '0');
+            joltages.emplace_back(c - '0');
         }
-        banks.push_back(std::move(joltages));
+        banks.emplace_back(std::move(joltages));
     }
     return banks;
 }
@@ -46,7 +45,7 @@ Maxes get_maxes(const Bank &bank){
             else seen_set.insert(bank[j]);
         }
         std::sort(max_heap.begin(), max_heap.end(), [](const auto& a, const auto& b) { return a.first > b.first; });
-        maxes.push_back(max_heap);
+        maxes.emplace_back(std::move(max_heap));
         seen_set.clear();
     }
     return maxes;
