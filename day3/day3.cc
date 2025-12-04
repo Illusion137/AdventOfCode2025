@@ -76,12 +76,9 @@ int64_t sol1(const std::string& path){
 }
 
 std::unordered_map<uint32_t, uint64_t> dp_cache{};
-uint64_t sol2_dp(const Bank &bank, const Maxes &maxes, uint64_t in_base_joltage, uint8_t left, uint8_t used){
-    if(left >= bank.size()) return 0;
+uint64_t sol2_dp(const uint8_t bank_size, const Maxes &maxes, uint64_t in_base_joltage, uint8_t left, uint8_t used){
+    if(left >= bank_size) return 0;
     if(used == SOL2_BATTERIES - 1) {
-        if(in_base_joltage + maxes[left][0].first == 169347417057382){
-            std::println("FOUND THIS");
-        }
         return in_base_joltage + maxes[left][0].first;
     }
     const uint32_t cache_key = ((uint16_t)left << 16) | used;
@@ -90,7 +87,7 @@ uint64_t sol2_dp(const Bank &bank, const Maxes &maxes, uint64_t in_base_joltage,
     uint64_t max_joltage = 0;
     for(const auto &[digit, digit_left]: maxes[left]){
         const uint64_t base_joltage = in_base_joltage + (digit * std::pow(10, SOL2_BATTERIES - 1 - used));
-        const auto rec_max_joltage = sol2_dp(bank, maxes, base_joltage, digit_left + 1, used + 1);
+        const auto rec_max_joltage = sol2_dp(bank_size, maxes, base_joltage, digit_left + 1, used + 1);
         if(rec_max_joltage > max_joltage){
             max_joltage = rec_max_joltage;
         }
@@ -102,11 +99,12 @@ uint64_t sol2_dp(const Bank &bank, const Maxes &maxes, uint64_t in_base_joltage,
 int64_t sol2(const std::string& path){
     int64_t sum = 0;
     const auto banks = get_banks(path);
+    dp_cache.reserve(1'000);
     for(const auto &bank: banks){
-        dp_cache = {};
         const auto maxes = get_maxes(bank);
-        const auto max = sol2_dp(bank, maxes, 0, 0, 0);
+        const auto max = sol2_dp(bank.size(), maxes, 0, 0, 0);
         sum += max;
+        dp_cache.clear();
     }
     return sum;
 }
