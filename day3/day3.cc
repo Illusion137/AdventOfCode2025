@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <cstdint>
 #include <string>
-#include <unordered_map>
 #include <unordered_set>
 
 #define SAMPLE_1 357
@@ -35,24 +34,20 @@ uint64_t get_joltage(uint8_t left, uint8_t right){
 }
 Maxes get_maxes(const Bank &bank){
     Maxes maxes;
+    std::unordered_set<uint8_t> seen_set;
     maxes.reserve(bank.size());
+    seen_set.reserve(bank.size());
     for(uint32_t i = 0; i < bank.size(); i++){
         std::vector<Max> max_heap;
-        max_heap.reserve(bank.size());
+        max_heap.reserve(bank.size() - i);
         for(uint32_t j = i; j < bank.size(); j++){
-            max_heap.push_back(std::make_pair<uint8_t, uint32_t>((uint8_t)bank[j], (uint32_t)j));
+            if(!seen_set.contains(bank[j]))
+                max_heap.emplace_back((uint8_t)bank[j], (uint32_t)j);
+            else seen_set.insert(bank[j]);
         }
-        std::sort(max_heap.begin(), max_heap.end(), [](const auto& a, const auto& b) {
-            return a.first == b.first ? a.second < b.second : a.first > b.first;
-        });
-        std::unordered_set<uint8_t> seen_set;
-        std::vector<Max> filtered_max_heap;
-        filtered_max_heap.reserve(max_heap.size());
-        for(const auto max: max_heap){
-            if(!seen_set.contains(max.first)) filtered_max_heap.push_back(max);
-            seen_set.insert(max.first);
-        }
-        maxes.push_back(filtered_max_heap);
+        std::sort(max_heap.begin(), max_heap.end(), [](const auto& a, const auto& b) { return a.first > b.first; });
+        maxes.push_back(max_heap);
+        seen_set.clear();
     }
     return maxes;
 }
@@ -75,36 +70,25 @@ int64_t sol1(const std::string& path){
     return sum;
 }
 
-std::unordered_map<uint32_t, uint64_t> dp_cache{};
-uint64_t sol2_dp(const uint8_t bank_size, const Maxes &maxes, uint64_t in_base_joltage, uint8_t left, uint8_t used){
+uint64_t sol2_rec(const uint8_t bank_size, const Maxes &maxes, uint64_t in_base_joltage, uint8_t left, uint8_t used){
     if(left >= bank_size) return 0;
-    if(used == SOL2_BATTERIES - 1) {
-        return in_base_joltage + maxes[left][0].first;
-    }
-    const uint32_t cache_key = ((uint16_t)left << 16) | used;
-    if(dp_cache.contains(cache_key)) return dp_cache.at(cache_key);
+    if(used == SOL2_BATTERIES - 1) return in_base_joltage + maxes[left][0].first;
 
-    uint64_t max_joltage = 0;
     for(const auto &[digit, digit_left]: maxes[left]){
         const uint64_t base_joltage = in_base_joltage + (digit * std::pow(10, SOL2_BATTERIES - 1 - used));
-        const auto rec_max_joltage = sol2_dp(bank_size, maxes, base_joltage, digit_left + 1, used + 1);
-        if(rec_max_joltage > max_joltage){
-            max_joltage = rec_max_joltage;
-        }
+        const auto rec_max_joltage = sol2_rec(bank_size, maxes, base_joltage, digit_left + 1, used + 1);
+        if(rec_max_joltage != 0) return rec_max_joltage;
     }
-    dp_cache.insert({cache_key, max_joltage});
-    return max_joltage;
+    return 0;
 }
 
 int64_t sol2(const std::string& path){
     int64_t sum = 0;
     const auto banks = get_banks(path);
-    dp_cache.reserve(1'000);
     for(const auto &bank: banks){
         const auto maxes = get_maxes(bank);
-        const auto max = sol2_dp(bank.size(), maxes, 0, 0, 0);
+        const auto max = sol2_rec(bank.size(), maxes, 0, 0, 0);
         sum += max;
-        dp_cache.clear();
     }
     return sum;
 }

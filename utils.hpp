@@ -1,3 +1,4 @@
+#include <chrono>
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -48,4 +49,14 @@ static inline std::vector<std::vector<char>> read_file_line_chars(std::string pa
         lines_chars.push_back(chars);
     }
     return lines_chars;
+}
+
+static inline std::chrono::time_point<std::chrono::steady_clock, std::chrono::duration<long long, std::ratio<1LL, 1000000000LL>>> TIME_START;
+static inline void time_start(){
+    TIME_START = std::chrono::high_resolution_clock::now();
+}
+static inline void time_end(){
+    auto TIME_END = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> duration = TIME_END - TIME_START;
+    std::println("{} ms", duration.count());
 }
