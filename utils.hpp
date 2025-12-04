@@ -15,8 +15,6 @@ static inline std::string read_file(std::string path){
     ss << file.rdbuf();
     return ss.str();    
 }
-static inline std::string read_input(){ return read_file(INPUT_FILE); }
-static inline std::string read_sample(){ return read_file(SAMPLE_FILE); }
 
 static inline std::vector<std::string> split_string(const std::string& input, const std::string& delimiter) {
     std::vector<std::string> result;
@@ -30,4 +28,24 @@ static inline std::vector<std::string> split_string(const std::string& input, co
     }
     result.push_back(input.substr(start));
     return result;
+}
+
+static inline std::vector<std::string> read_file_lines(std::string path){
+    const auto contents = read_file(path);
+    return split_string(path, "\n");
+}
+static inline std::vector<std::vector<char>> read_file_line_chars(std::string path){
+    const auto contents = read_file(path);
+    const auto lines = split_string(contents, "\n");
+    std::vector<std::vector<char>> lines_chars;
+    lines_chars.reserve(lines.size());
+    for(const auto &line: lines){
+        std::vector<char> chars;
+        chars.reserve(line.size());
+        for(const char c: line){
+            chars.push_back(c);
+        }
+        lines_chars.push_back(chars);
+    }
+    return lines_chars;
 }
