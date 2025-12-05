@@ -14,6 +14,7 @@ int64_t sol2(const std::string& path){
 }
 
 int main(){
+    time_start();
     std::println("Solution1-Sample: {}", sol1(SAMPLE_FILE));
     assert(sol1(SAMPLE_FILE) == SAMPLE_1);
     std::println("Solution1-Real  : {}", sol1(INPUT_FILE));
@@ -21,5 +22,6 @@ int main(){
     std::println("Solution2-Sample: {}", sol2(SAMPLE_FILE));
     assert(sol2(SAMPLE_FILE) == SAMPLE_2);
     std::println("Solution2-Real  : {}", sol2(INPUT_FILE));
+    time_end();
     return 0;
 }

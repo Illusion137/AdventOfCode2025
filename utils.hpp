@@ -64,5 +64,5 @@ static inline void time_start(){
 static inline void time_end(){
     auto TIME_END = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> duration = TIME_END - TIME_START;
-    std::println("{} ms", duration.count());
+    std::println("\033[0;34mProgram Time: {} ms\033[0m", duration.count());
 }
