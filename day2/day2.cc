@@ -77,7 +77,6 @@ uint64_t sol2(const std::string& path){
                 if(digits % i != 0) continue;
                 if(!is_invalid_id(id, i, digits)) continue;
                 sum += id;
-                id += std::pow(10, (digits / 2));
                 break;
             }
         }
