@@ -49,6 +49,25 @@ bool is_invalid_id(const uint64_t id, const uint32_t splits, const uint32_t digi
     return true;
 }
 
+inline bool isdivby(const uint32_t num1, const uint32_t &&by){
+    return num1 % by == 0;
+}
+bool is_invalid_id_fast(const uint64_t id, const uint32_t digits){
+    switch(digits){
+        case 1: return false;
+        case 2: return isdivby(id, 11);
+        case 3: return isdivby(id, 111);
+        case 4: return isdivby(id, 1111) || isdivby(id, 101);
+        case 5: return isdivby(id, 11111);
+        case 6: return isdivby(id, 111111) || isdivby(id, 10101) || isdivby(id, 1001);
+        case 7: return isdivby(id, 1111111);
+        case 8: return isdivby(id, 11111111) || isdivby(id, 1010101) || isdivby(id, 10001);
+        case 9: return isdivby(id, 111111111) || isdivby(id, 1001001);
+        case 10: return isdivby(id, 1111111111) || isdivby(id, 101010101) || isdivby(id, 100001);
+        default: return false;
+    }
+}
+
 uint64_t sol1(const std::string& path){
     uint64_t sum = 0;
     const auto ranges = get_ranges(path);
@@ -73,12 +92,9 @@ uint64_t sol2(const std::string& path){
     for(const auto &range: ranges){
         for(uint64_t id = range.first; id <= range.second; id++){
             const uint32_t digits = count_digits(id);
-            for(uint32_t i = 2; i <= digits; i++){
-                if(digits % i != 0) continue;
-                if(!is_invalid_id(id, i, digits)) continue;
+            if(is_invalid_id_fast(id, digits)){
                 sum += id;
-                break;
-            }
+            } 
         }
     }
     return sum;
