@@ -1,6 +1,6 @@
 #include "../utils.hpp"
 
-#define SAMPLE_1 -1
+#define SAMPLE_1 2
 #define SAMPLE_2 -1
 
 uint64_t sol1(const std::string &path){

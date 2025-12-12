@@ -7,13 +7,13 @@
 #define INPUT_FILE "input.txt"
 #define SAMPLE_FILE "sample.txt"
 
-#define assert(value, expected) {\
+#define sassert(value, expected) {\
 if(value != expected) { std::println("\033[31m""Expected {}, but got: {}""\033[0m", expected, value); exit(1); }\
 }
 
 static inline std::string read_file(std::string path){
     std::ifstream file{path};
-    assert(file.is_open(), true);
+    sassert(file.is_open(), true);
 
     std::stringstream ss;
     ss << file.rdbuf();
@@ -36,7 +36,7 @@ static inline std::vector<std::string> split_string(const std::string& input, co
 
 static inline std::vector<std::string> read_file_lines(std::string path){
     std::ifstream file{path};
-    assert(file.is_open(), true);
+    sassert(file.is_open(), true);
     std::string line;
     std::vector<std::string> lines;
     lines.reserve(4);
