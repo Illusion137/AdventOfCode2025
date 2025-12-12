@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <bitset>
 #include <cstdint>
-#include <iostream>
 #include <unordered_map>
 #include <z3++.h>
 
@@ -66,7 +65,7 @@ uint16_t sol1_dp(const Schematic &schematic, std::bitset<10> light_diagram, uint
     const uint64_t cache_key = get_cache_key_v1(light_diagram, presses);
     if(sol1_dp_cache.contains(cache_key)) return sol1_dp_cache.at(cache_key);
     if(schematic.light_diagram == light_diagram) return presses;
-    if(presses >= 10) return UINT16_MAX;
+    if(presses >= 8) return UINT16_MAX;
     uint32_t min_presses = UINT16_MAX;
     for(uint32_t i = 0; i < schematic.buttons.size(); i++){
         const auto toggle_diagram = light_diagram ^ schematic.buttons[i];
@@ -98,17 +97,12 @@ uint64_t sol2_solve_schematic(const Schematic &schematic){
         solver.add(button_variables[i] >= 0);
     } 
 
-// vvars = [bvars[j] for j,button in enumerate(buttons) if i in button]
-// solver.add(Sum(vvars) == v)
     for(uint32_t i = 0; i < schematic.joltages.size(); i++){
         z3::expr sum_expr = context.int_val(0);
         for(uint32_t j = 0; j < schematic.buttons.size(); j++){
-            // for(uint32_t k = 0; i < schematic.joltages.size(); k++){
             if(schematic.buttons[j][i]){
                 sum_expr = sum_expr + button_variables[j];
-                // break;
             }
-            // }
         }
         solver.add(sum_expr == schematic.joltages[i]);
     }

@@ -6,6 +6,7 @@
 
 #define INPUT_FILE "input.txt"
 #define SAMPLE_FILE "sample.txt"
+#define SAMPLE_FILE2 "sample2.txt"
 
 #define sassert(value, expected) {\
 if(value != expected) { std::println("\033[31m""Expected {}, but got: {}""\033[0m", expected, value); exit(1); }\
