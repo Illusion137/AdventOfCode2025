@@ -104,14 +104,14 @@ int main(){
     time_start();
     const auto sol1_sample_result = sol1(SAMPLE_FILE);
     std::println("Solution1-Sample: {}", sol1_sample_result);
-    assert(sol1_sample_result == SAMPLE_1);
+    assert(sol1_sample_result, SAMPLE_1);
 
     const auto sol1_real_result = sol1(INPUT_FILE);
     std::println("Solution1-Real  : {}", sol1_real_result);
 
     const auto sol2_sample_result = sol2(SAMPLE_FILE);
     std::println("Solution2-Sample: {}", sol2_sample_result);
-    assert(sol2_sample_result == SAMPLE_2);
+    assert(sol2_sample_result, SAMPLE_2);
 
     const auto sol2_real_result = sol2(INPUT_FILE);
     std::println("Solution2-Real  : {}", sol2_real_result);
